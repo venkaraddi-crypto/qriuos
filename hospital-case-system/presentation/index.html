@@ -103,6 +103,45 @@ ul.list li b{color:var(--ink)}
     page-break-after:always;height:100vh}
   #progress,#dots,#hud,#arrows{display:none}
 }
+/* ---------- 16:9 fixed stage (1280×720) ---------- */
+#deck{position:absolute;top:50%;left:50%;width:1280px;height:720px;
+  transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center center}
+.slide{width:1280px;height:720px;padding:46px 60px 62px;overflow:hidden}
+h1{font-size:46px}
+.title-slide h1{font-size:58px}
+h2{font-size:31px}
+h3{font-size:17px}
+p.lede{font-size:17px}
+.stats{gap:12px;margin:20px 0}
+.stat{padding:16px 18px}
+.stat .n{font-size:36px}
+.stat .n small{font-size:19px}
+.stat .l{margin-top:6px;font-size:12.5px}
+.src{margin-top:10px;font-size:10.5px}
+.grid{gap:12px}
+.card{padding:13px 15px}
+.card p{font-size:12.5px}
+.split{gap:26px}
+.journey .step{padding:10px 11px}
+.step .what{font-size:11.5px}
+.step .who{font-size:11.5px}
+ul.list li{font-size:13.5px;padding:7px 0 7px 24px}
+.chain .node{padding:11px 13px}
+.chain .node h4{font-size:14px}
+.chain .node p{font-size:11px}
+.mock .body{gap:6px;padding:8px}
+.mock .cell{padding:5px 7px}
+.mock .cell b{font-size:10px;margin-bottom:2px}
+.qrmotif{right:60px;bottom:80px}
+.footer-note{left:60px;bottom:42px}
+.toc{font-size:13.5px}
+@media print{
+  @page{size:1280px 720px;margin:0}
+  html,body{height:auto;background:#fff}
+  #deck{position:static;transform:none;width:1280px;height:auto}
+  .slide{width:1280px;height:720px;page-break-after:always;break-after:page}
+  .slide:last-child{page-break-after:auto}
+}
 </style>
 </head>
 <body>
@@ -426,6 +465,10 @@ ul.list li b{color:var(--ink)}
 (function(){
   var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,ov=false;
   var dots=document.getElementById('dots'),prog=document.getElementById('progress');
+  var deck=document.getElementById('deck');
+  /* scale fixed 1280×720 stage to fit any screen */
+  function fit(){deck.style.setProperty('--s',Math.min(window.innerWidth/1280,window.innerHeight/720));}
+  window.addEventListener('resize',fit);fit();
   /* pre-set counters to final values so PDF/print shows real numbers */
   [].forEach.call(document.querySelectorAll('[data-count]'),function(el){
     el.textContent=el.getAttribute('data-count');});
@@ -452,11 +495,12 @@ ul.list li b{color:var(--ink)}
     if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1);}
     else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
     else if(e.key==='Home'){go(0)} else if(e.key==='End'){go(slides.length-1)}
-    else if(e.key.toLowerCase()==='o'){ov=!ov;document.getElementById('deck').style.transform=ov?'scale(.22)':'';
-      document.getElementById('deck').style.transformOrigin='0 0';
-      document.getElementById('deck').style.pointerEvents=ov?'none':'';
-      if(ov){document.querySelectorAll('.slide').forEach(function(s){s.style.display='flex';s.style.position='relative';s.style.height='20vh';s.style.padding='14px';s.style.overflow='hidden';s.style.borderBottom='1px solid #D8CFC0';});}
-      else{document.querySelectorAll('.slide').forEach(function(s,i){s.style.display=i===cur?'flex':'none';s.style.position='absolute';s.style.height='';s.style.padding='';s.style.overflow='';s.style.borderBottom='';});}}
+    else if(e.key.toLowerCase()==='o'){ov=!ov;
+      deck.style.pointerEvents=ov?'none':'';
+      if(ov){deck.style.transform='scale(.35)';deck.style.transformOrigin='0 0';deck.style.height='auto';
+        document.querySelectorAll('.slide').forEach(function(s){s.style.display='flex';s.style.position='relative';s.style.height='78px';s.style.padding='10px 14px';s.style.overflow='hidden';s.style.borderBottom='1px solid #D8CFC0';s.style.opacity='1';});}
+      else{deck.style.transform='';deck.style.transformOrigin='';deck.style.height='';
+        document.querySelectorAll('.slide').forEach(function(s,i){s.style.display=i===cur?'flex':'none';s.style.position='absolute';s.style.height='';s.style.padding='';s.style.overflow='';s.style.borderBottom='';s.style.opacity='';});}}
     else if(e.key.toLowerCase()==='p'){window.print();}});
   document.getElementById('next').onclick=function(){go(cur+1)};
   document.getElementById('prev').onclick=function(){go(cur-1)};
