@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArogyaSetu — Presentation</title>
+<style>
+:root{
+  --paper:#F7F3EC; --ink:#1A1A1A; --hairline:#D8CFC0;
+  --clay:#B4552D; --claydark:#94401F;
+  --allo:#3E5C76; --allo-t:#EDF1F5;
+  --ayu:#7A6A21; --ayu-t:#F4F0E1;
+  --green:#4A6B3A; --green-t:#EDF3E6;
+  --red:#A03A2A; --red-t:#F9E9E4;
+  --amber:#9A7A1F; --amber-t:#F6EFDC;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--clay);width:0%;transition:width .4s ease;z-index:60}
+#dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:60}
+#dots button{width:8px;height:8px;border-radius:50%;border:1px solid var(--hairline);background:transparent;cursor:pointer;padding:0}
+#dots button.on{background:var(--clay);border-color:var(--clay)}
+#hud{position:fixed;bottom:14px;left:0;right:0;display:flex;justify-content:space-between;
+  align-items:center;padding:0 22px;z-index:60;font-size:12px;color:#6b6257;letter-spacing:.08em}
+#hud .brand{font-family:var(--serif);font-style:italic;color:var(--clay)}
+#hud .keys span{border:1px solid var(--hairline);padding:2px 6px;margin-left:4px;font-family:var(--mono);font-size:10px}
+#arrows{position:fixed;bottom:44px;right:22px;display:flex;gap:8px;z-index:60}
+#arrows button{width:38px;height:38px;border:1px solid var(--ink);background:transparent;color:var(--ink);
+  font-size:16px;cursor:pointer;border-radius:50%}
+#arrows button:hover{background:var(--ink);color:var(--paper)}
+.slide{position:absolute;inset:0;padding:64px 84px 76px;display:none;flex-direction:column;
+  justify-content:center;opacity:0}
+.slide.active{display:flex;animation:fadeUp .55s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.kicker{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--clay);
+  margin-bottom:10px;font-weight:600}
+.kicker.ayu{color:var(--ayu)} .kicker.allo{color:var(--allo)}
+h1{font-family:var(--serif);font-weight:400;font-size:56px;line-height:1.08;margin-bottom:18px}
+h2{font-family:var(--serif);font-weight:400;font-size:38px;line-height:1.15;margin-bottom:22px}
+h3{font-family:var(--serif);font-weight:600;font-size:19px;margin-bottom:8px}
+p.lede{font-size:19px;line-height:1.55;color:#3d372f;max-width:840px}
+.hr{border:none;border-top:1px solid var(--hairline);margin:18px 0}
+.mono{font-family:var(--mono)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:26px 0}
+.stat{border:1px solid var(--hairline);padding:20px 22px;background:#fffdf8}
+.stat .n{font-family:var(--serif);font-size:44px;color:var(--clay);line-height:1}
+.stat .n small{font-size:22px}
+.stat.green .n{color:var(--green)} .stat.allo .n{color:var(--allo)} .stat.ayu .n{color:var(--ayu)} .stat.red .n{color:var(--red)}
+.stat .l{margin-top:8px;font-size:13.5px;line-height:1.45;color:#4a443b}
+.src{font-size:11.5px;color:#8a8172;margin-top:14px;line-height:1.5}
+.src b{color:#6b6257}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{border:1px solid var(--hairline);padding:16px 18px;background:#fffdf8}
+.card p{font-size:13.5px;line-height:1.5;color:#4a443b}
+.tint-allo{background:var(--allo-t)} .tint-ayu{background:var(--ayu-t)}
+.tint-green{background:var(--green-t)} .tint-red{background:var(--red-t)} .tint-amber{background:var(--amber-t)}
+.badge{display:inline-block;border:1px solid currentColor;padding:1px 9px;border-radius:99px;
+  font-size:11px;letter-spacing:.06em}
+.b-red{color:var(--red)} .b-green{color:var(--green)} .b-amber{color:var(--amber)}
+.b-allo{color:var(--allo)} .b-ayu{color:var(--ayu)} .b-clay{color:var(--clay)}
+.journey{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:8px}
+.step{border:1px solid var(--hairline);padding:12px 13px;background:#fffdf8}
+.step .num{font-family:var(--mono);font-size:11px;color:var(--clay)}
+.step .who{font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;margin:3px 0 4px}
+.step .what{font-size:12.5px;line-height:1.4;color:#4a443b}
+.step.hot{border-color:var(--red)}
+.chain{display:flex;align-items:stretch;margin:18px 0}
+.chain .node{border:1px solid var(--hairline);padding:14px 16px;background:#fffdf8;flex:1}
+.chain .node h4{font-family:var(--serif);font-size:15.5px;font-weight:600;margin-bottom:5px}
+.chain .node p{font-size:12px;line-height:1.45;color:#4a443b}
+.chain .arrow{display:flex;align-items:center;padding:0 10px;color:var(--clay);font-size:20px}
+.node.ok{border-color:var(--green)} .node.fallback{border-color:var(--amber)} .node.mock{border-color:var(--red)}
+.mock{border:1px solid var(--ink);background:#fffdf8;font-size:11px}
+.mock .bar{display:flex;justify-content:space-between;border-bottom:1px solid var(--hairline);
+  padding:8px 12px;font-family:var(--serif);font-style:italic;color:var(--clay)}
+.mock .body{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px}
+.mock .cell{border:1px solid var(--hairline);padding:8px 9px;color:#4a443b;line-height:1.35}
+.mock .cell b{display:block;font-weight:600;color:var(--ink);font-size:10.5px;margin-bottom:3px}
+.mock .cell.red{border-color:var(--red);background:var(--red-t)}
+.mock .cell.green{background:var(--green-t)}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:start}
+ul.list{list-style:none}
+ul.list li{padding:9px 0 9px 26px;border-bottom:1px solid var(--hairline);position:relative;
+  font-size:15px;line-height:1.5;color:#3d372f}
+ul.list li:before{content:"—";position:absolute;left:0;color:var(--clay)}
+ul.list li b{color:var(--ink)}
+.title-slide{align-items:flex-start}
+.title-slide h1{font-size:72px}
+.title-slide .sub{font-family:var(--serif);font-style:italic;font-size:22px;color:#5c5449;max-width:740px;line-height:1.5}
+.qrmotif{position:absolute;right:84px;bottom:110px;opacity:.9}
+.footer-note{position:absolute;bottom:70px;left:84px;font-size:12px;color:#8a8172;letter-spacing:.06em}
+.toc{columns:2;column-gap:56px;font-size:15px;margin-top:10px}
+.toc div{padding:7px 0;border-bottom:1px solid var(--hairline);break-inside:avoid;color:#3d372f}
+.toc div span{font-family:var(--mono);color:var(--clay);margin-right:12px;font-size:12px}
+@media print{
+  html,body{overflow:visible}
+  .slide{display:flex!important;opacity:1!important;position:relative;inset:auto;
+    page-break-after:always;height:100vh}
+  #progress,#dots,#hud,#arrows{display:none}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="dots"></div>
+<div id="hud">
+  <span class="brand">ArogyaSetu — Patient Case-Taking Software</span>
+  <span class="keys">navigate<span>←</span><span>→</span><span>space</span> overview<span>O</span> print<span>P</span></span>
+</div>
+<div id="arrows">
+  <button id="prev" aria-label="Previous">&#8592;</button>
+  <button id="next" aria-label="Next">&#8594;</button>
+</div>
+<main id="deck">
+
+<!-- 01 TITLE -->
+<section class="slide title-slide">
+  <div class="kicker">ArogyaSetu &nbsp;·&nbsp; Patient Case-Taking Software for Indian OPDs</div>
+  <h1>The doctor should listen.<br>The software should write.</h1>
+  <p class="sub">From a seven-minute verbal complaint in any Indian language — to a structured,
+  coded, shareable medical record — in a single OPD visit, driven by one QR code.
+  Bilingual by design: Ayurveda &amp; Allopathy in one record.</p>
+  <hr class="hr" style="width:520px;margin-top:26px">
+  <p class="footer-note">Interactive deck &nbsp;·&nbsp; ←/→ to navigate &nbsp;·&nbsp; P to export PDF &nbsp;·&nbsp; live demo on localhost:3000</p>
+  <svg class="qrmotif" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="#B4552D" stroke-width="2">
+    <rect x="4" y="4" width="40" height="40"/><rect x="12" y="12" width="24" height="24" fill="#B4552D" stroke="none"/>
+    <rect x="76" y="4" width="40" height="40"/><rect x="84" y="12" width="24" height="24" fill="#B4552D" stroke="none"/>
+    <rect x="4" y="76" width="40" height="40"/><rect x="12" y="84" width="24" height="24" fill="#B4552D" stroke="none"/>
+    <rect x="56" y="56" width="16" height="16"/><rect x="84" y="56" width="12" height="12"/>
+    <rect x="56" y="84" width="12" height="12"/><rect x="84" y="84" width="32" height="12"/>
+    <rect x="104" y="104" width="12" height="12"/>
+  </svg>
+</section>
+
+<!-- 02 THE PROBLEM -->
+<section class="slide">
+  <div class="kicker">01 · The problem, in the real world</div>
+  <h2>The consultation is the most valuable two minutes in Indian healthcare.<br>Half of it is spent writing.</h2>
+  <div class="stats">
+    <div class="stat red"><div class="n">~2 <small>min</small></div><div class="l">Average doctor–patient consultation time in India — among the shortest of 67 countries studied</div></div>
+    <div class="stat red"><div class="n">1 : 834</div><div class="l">Government-reported doctor : population ratio — a doctor for every 834 people, ~80% of whom never reach a hospital record system</div></div>
+    <div class="stat"><div class="n">5×</div><div class="l">The same history is retold at five desks — reception, nurse, doctor, lab, pharmacy — because nothing carries forward</div></div>
+    <div class="stat"><div class="n">Paper</div><div class="l">Prescriptions, lab reports and discharge summaries live in plastic bags; a returning patient is, digitally, a stranger</div></div>
+  </div>
+  <p class="src"><b>Sources:</b> Irving et al., <i>BMJ Open</i> 2017 (international consultation-time study, 67 countries, 2012–13 NCDRHS India data) · PIB / Ministry of Health &amp; Family Welfare 2024 (doctor availability) · field observation at Indian OPDs.</p>
+</section>
+
+<!-- 03 LANGUAGE BARRIER -->
+<section class="slide">
+  <div class="kicker">02 · The barrier nobody builds for</div>
+  <h2>Healthcare in India speaks a language<br>many patients don't read.</h2>
+  <p class="lede">A tribal patient in Chamarajanagar can explain their illness fluently — but cannot fill
+  an English intake form. Studies at Indian district hospitals document patients leaving OPDs without
+  understanding their diagnosis or medicines. Forms exclude; voice includes.</p>
+  <div class="stats">
+    <div class="stat ayu"><div class="n">22</div><div class="l">Scheduled languages, 100+ major mother tongues — India has no single "national" clinical language</div></div>
+    <div class="stat ayu"><div class="n">~40%</div><div class="l">Of Indian adults cannot read a standard prescription label comfortably</div></div>
+    <div class="stat green"><div class="n">22</div><div class="l">Languages our speech pipeline understands (Sarvam Saaras v3) — the patient speaks; the record is written for the doctor</div></div>
+  </div>
+  <p class="src"><b>Sources:</b> Census of India (scheduled languages) · UNESCO Institute for Statistics, India literacy profile · Karanth &amp; Vaid, language barriers in Karnataka district-hospital care, 2022.</p>
+</section>
+
+<!-- 04 WHY NOW -->
+<section class="slide">
+  <div class="kicker">03 · Why now</div>
+  <h2>The rails are already laid — India built the<br>world's largest digital health network.</h2>
+  <div class="stats">
+    <div class="stat allo"><div class="n">73.9 <small>crore</small></div><div class="l">ABHA digital health accounts created under Ayushman Bharat Digital Mission</div></div>
+    <div class="stat allo"><div class="n">49 <small>crore</small></div><div class="l">Health records already linked to ABHA — but most OPD software still can't feed them structured data</div></div>
+    <div class="stat green"><div class="n">50 <small>crore+</small></div><div class="l">Teleconsultations on eSanjeevani — proof that Indians will use digital health at population scale</div></div>
+    <div class="stat ayu"><div class="n">$43.4 <small>Bn</small></div><div class="l">AYUSH &amp; herbal market size (2024) — 3,000+ government Ayush hospitals with no modern case-taking software</div></div>
+  </div>
+  <p class="lede" style="margin-top:8px">The infrastructure (identity, consent, records) exists. What's missing is the
+  <b style="color:var(--clay)">point-of-care layer</b>: software that captures the consultation itself. That is ArogyaSetu.</p>
+  <p class="src"><b>Sources:</b> PIB, Ministry of Health &amp; Family Welfare — ABDM milestones (Feb 2025); eSanjeevani 5-crore+ milestone updates (2025–26); IMARC India AYUSH &amp; Herbal Market Report 2024.</p>
+</section>
+
+<!-- 05 SOLUTION -->
+<section class="slide">
+  <div class="kicker">04 · The solution</div>
+  <h2>ArogyaSetu — one QR code, one conversation,<br>one complete medical record.</h2>
+  <div class="grid g4">
+    <div class="card tint-allo"><h3>One QR, whole hospital</h3><p>Booking → check-in → vitals → consult → pharmacy → billing → discharge. Every desk scans the same code; the history is never retold.</p></div>
+    <div class="card tint-green"><h3>The patient talks, the app writes</h3><p>Voice-first intake and ambient scribe convert speech in 22 languages into SOCRATES-structured notes and SOAP drafts the doctor approves.</p></div>
+    <div class="card tint-ayu"><h3>Ayurveda is computable</h3><p>Prakriti, Ashtavidha and Dashavidha assessments, plus 3-way dual coding: NAMASTE ↔ ICD-11 TM2 ↔ ICD-11 biomedicine.</p></div>
+    <div class="card tint-amber"><h3>ABDM-ready by design</h3><p>ABHA linking, FHIR R4 document bundles and care-context references for every encounter — exportable to the national grid.</p></div>
+  </div>
+  <p class="src" style="margin-top:22px">8 role-based portals · patient pre-consult intake · encrypted medical Drive · family case files · referral dispatch · drug-interaction safety · FHIR export</p>
+</section>
+
+<!-- 06 QR JOURNEY -->
+<section class="slide">
+  <div class="kicker">05 · The hero flow</div>
+  <h2>Ten steps, five desks, one code.<br><span style="font-style:italic;color:#5c5449">Nothing is re-entered, ever.</span></h2>
+  <div class="journey">
+    <div class="step"><div class="num">01</div><div class="who">Patient</div><div class="what">Books appointment in 6 guided steps</div></div>
+    <div class="step"><div class="num">02</div><div class="who">Patient</div><div class="what">Gets QR slip <span class="mono">AIIA-CK-…</span> + queue token</div></div>
+    <div class="step"><div class="num">03</div><div class="who">Patient</div><div class="what">Pre-consult intake by voice, consent-gated</div></div>
+    <div class="step"><div class="num">04</div><div class="who">Reception</div><div class="what">Scans QR → checked in (the only check-in path)</div></div>
+    <div class="step"><div class="num">05</div><div class="who">Nurse</div><div class="what">Scans QR → vitals recorded</div></div>
+    <div class="step hot"><div class="num">06</div><div class="who">Doctor</div><div class="what">Queue auto-promotes red-flag / emergency cases</div></div>
+    <div class="step"><div class="num">07</div><div class="who">Doctor</div><div class="what">Consultation screen — intake already filled</div></div>
+    <div class="step"><div class="num">08</div><div class="who">Pharmacy</div><div class="what">Scans QR → dispenses, stock + bill auto-raised</div></div>
+    <div class="step"><div class="num">09</div><div class="who">Billing</div><div class="what">One click pay — consult + meds + labs</div></div>
+    <div class="step"><div class="num">10</div><div class="who">Doctor</div><div class="what">Discharge → FHIR bundle + follow-up booked</div></div>
+  </div>
+  <p class="src">Row-locked token allocation (no double-booking) · forged or guessed codes return <b>404</b> · walk-in &amp; emergency patients enter at the front of the queue with token <span class="mono">E</span></p>
+</section>
+
+<!-- 07 PRODUCT TOUR -->
+<section class="slide">
+  <div class="kicker">06 · Inside the consultation</div>
+  <h2>Thirteen cards. Everything the doctor needs,<br>nothing they had to type.</h2>
+  <div class="split">
+    <div>
+      <ul class="list">
+        <li><b>Intake arrives pre-filled</b> — complaints, SOCRATES history, allergies, medicines, past history, positive ROS — collected from the patient before they left home</li>
+        <li><b>Red-flag safety</b> — "chest pain / breathlessness / bleeding" in the complaint auto-flags the case and promotes it in the queue</li>
+        <li><b>One pick, three codes</b> — choosing <i>Amlapitta</i> records NAM-AYU-0001 + TM26.SA00 + K29.7 simultaneously</li>
+        <li><b>Sign with confidence</b> — prescriptions are interaction-checked against a severity pair-list before signing</li>
+      </ul>
+    </div>
+    <div class="mock">
+      <div class="bar"><span>ArogyaSetu · Consultation</span><span class="mono">token 3 · UHID AIIA-2026-00003</span></div>
+      <div class="body">
+        <div class="cell red"><b>PatientHeader</b>identity · red-flag banner · prior visits</div>
+        <div class="cell green"><b>IntakeSummaryCard</b>patient-entered history, ready</div>
+        <div class="cell"><b>HistorySummary</b>auto-narrative → insert into notes</div>
+        <div class="cell"><b>VoiceIntake</b>record → 22-language STT → text</div>
+        <div class="cell"><b>SOCRATES</b>site·onset·character·severity·duration</div>
+        <div class="cell"><b>VitalsTrend</b>pulse sparkline across visits</div>
+        <div class="cell"><b>AmbientScribe</b>diarized audio → SOAP draft → approve</div>
+        <div class="cell"><b>Diagnosis</b>debounced search · dual-coded</div>
+        <div class="cell"><b>Prescription</b>meds + interaction check on sign</div>
+        <div class="cell"><b>LabOrders</b>order → result → auto abnormal flag</div>
+        <div class="cell"><b>Ayurveda</b>prakriti % · ashtavidha · dashavidha Bala</div>
+        <div class="cell"><b>Dispatch</b>pharmacy auto · refer therapy / dept</div>
+        <div class="cell"><b>Summary &amp; Notes</b>FHIR bundle · print ℞ · discharge</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 VOICE AI -->
+<section class="slide">
+  <div class="kicker">07 · The AI that does the typing</div>
+  <h2>Voice in, structure out.</h2>
+  <div class="chain">
+    <div class="node ok"><h4>Patient speaks</h4><p>"Do din se seene mein jalan hai, khane ke baad badh jaati hai…"</p></div>
+    <div class="arrow">→</div>
+    <div class="node ok"><h4>Sarvam Saaras v3 STT</h4><p>22 Indic languages, diarized two-speaker consultation audio</p></div>
+    <div class="arrow">→</div>
+    <div class="node ok"><h4>SOCRATES extractor</h4><p>Site · Onset · Character · Radiation · Associations · Timing · Severity · Duration</p></div>
+    <div class="arrow">→</div>
+    <div class="node ok"><h4>SOAP draft</h4><p>LLM drafts Subjective / Objective / Assessment / Plan</p></div>
+    <div class="arrow">→</div>
+    <div class="node ok"><h4>Doctor approves</h4><p>One click — the doctor remains the signer of record</p></div>
+  </div>
+  <div class="grid g3">
+    <div class="card"><p><b style="color:var(--ink)">Pre-consult intake (patient, at home):</b> consent-gated adaptive questions — the branching engine scores complaint keywords and asks only what matters (cardiac ≠ dermatology).</p></div>
+    <div class="card"><p><b style="color:var(--ink)">In the room (doctor):</b> ambient scribe records the conversation, separates the two speakers, drafts the note; vitals trend and prior visits are one glance away.</p></div>
+    <div class="card"><p><b style="color:var(--ink)">Paper → digital:</b> patients photograph old lab reports / prescriptions; OCR + extraction recovers values, flags abnormals against reference ranges, and the doctor confirms.</p></div>
+  </div>
+</section>
+
+<!-- 09 AI HONESTY -->
+<section class="slide">
+  <div class="kicker">08 · The principle judges remember</div>
+  <h2>Honest AI — the system never invents<br>a medical fact.</h2>
+  <div class="chain">
+    <div class="node ok"><h4>1 · Real — Sarvam AI</h4><p>Primary engine per capability (STT, translate, chat, TTS, OCR). Key held encrypted, admin-configurable at runtime.</p></div>
+    <div class="arrow">→</div>
+    <div class="node fallback"><h4>2 · Fallback — local</h4><p>openai-whisper and Ollama run on the same machine. Works offline; no cloud dependency for core capture.</p></div>
+    <div class="arrow">→</div>
+    <div class="node mock"><h4>3 · Labelled mock</h4><p>Only if both fail. Response is flagged <span class="mono">mocked:true</span> with the real error attached. Never fabricates text.</p></div>
+  </div>
+  <ul class="list" style="margin-top:14px">
+    <li><b>Tested honesty:</b> the suite includes an explicit assertion that when no engine can transcribe, the API returns <span class="mono">provider:"none"</span> + error — not a made-up transcript</li>
+    <li><b>Admin transparency:</b> a live real-vs-mocked table on the admin portal shows exactly which capabilities are live</li>
+    <li><b>Mocked by design (and labelled):</b> ABDM sandbox bridge (OTP 123456), payment gateway</li>
+    <li><b>Human stays in charge:</b> AI drafts; the doctor reads, edits, and approves every note and prescription</li>
+  </ul>
+</section>
+
+<!-- 10 AYURVEDA -->
+<section class="slide">
+  <div class="kicker ayu">09 · Making 3,000 years computable</div>
+  <h2>One diagnosis, three codes —<br>Ayurveda and biomedicine in the same record.</h2>
+  <div class="chain">
+    <div class="node ok" style="border-color:var(--ayu)"><h4>Doctor picks the Ayurvedic term</h4><p>Debounced search over 42 curated NAMASTE terms with synonyms (Amlapitta, Jwara, Shwasa, Kasa, Prameha, Sandhivata…)</p></div>
+    <div class="arrow">→</div>
+    <div class="node ok" style="border-color:var(--ayu)"><h4>3 rows written at once</h4><p>NAMASTE <span class="mono">NAM-AYU-0001</span> · ICD-11 TM2 <span class="mono">TM26.SA00</span> · ICD-11 biomedicine <span class="mono">K29.7</span> (reflux oesophagitis / gastritis)</p></div>
+    <div class="arrow">→</div>
+    <div class="node ok"><h4>FHIR R4 bundle</h4><p>Dual-coded Conditions + prakriti Observations in a document Bundle — legible to any ABDM-participating hospital</p></div>
+  </div>
+  <div class="grid g3">
+    <div class="card tint-ayu"><h3>Prakriti &amp; Vikriti</h3><p>18-trait questionnaire scores Vata / Pitta / Kapha percentages; current symptoms identify the aggravated dosha.</p></div>
+    <div class="card tint-ayu"><h3>Ashtavidha &amp; Dashavidha</h3><p>The 8 classical examinations (pulse, tongue, urine…) and Charaka's ten-fold assessment with a computed Bala (strength) score.</p></div>
+    <div class="card tint-green"><h3>Why it matters</h3><p>India has 3,000+ Ayush hospitals and 28,000+ dispensaries whose records are invisible to the biomedical system. Dual coding ends that silo.</p></div>
+  </div>
+</section>
+
+<!-- 11 SECURITY -->
+<section class="slide">
+  <div class="kicker allo">10 · Privacy is the product</div>
+  <h2>Encrypted, consented, audited —<br>and the audio deletes itself.</h2>
+  <div class="grid g4">
+    <div class="card"><h3 class="mono">AES · Fernet</h3><p>Aadhaar numbers encrypted at rest, masked <span class="mono">XXXX-XXXX-1234</span> in every API response. Medical Drive blobs stored encrypted, never publicly served.</p></div>
+    <div class="card"><h3>Rotating sessions</h3><p>Short-lived JWT + httpOnly refresh cookie that rotates on every use; patients can see and revoke all active sessions.</p></div>
+    <div class="card"><h3>Granular consent</h3><p>Consultation recording requires explicit per-item consent, is revocable, and raw audio auto-purges after the retention window (default 30 days).</p></div>
+    <div class="card"><h3>Audit &amp; ownership</h3><p>Every sensitive action logged; patients can read only their own records (403-tested), staff act only within their role.</p></div>
+  </div>
+  <p class="src">Production mode refuses to boot with a development secret or missing encryption key · drug-interaction pair list guards prescriptions · access to another patient's Drive documents requires an explicit, expiring, reason-tagged grant</p>
+</section>
+
+<!-- 12 ARCHITECTURE -->
+<section class="slide">
+  <div class="kicker">11 · Under the hood</div>
+  <h2>Two clean services, standard protocols,<br>nothing exotic to deploy.</h2>
+  <div class="split">
+    <div class="mock">
+      <div class="bar"><span>System architecture</span><span>localhost:3000 / :8000</span></div>
+      <div class="body" style="grid-template-columns:1fr">
+        <div class="cell"><b>Next.js 14 · React 18 · Tailwind · zustand</b>34 routes, 8 role portals · jsQR camera scanning · QR generation · 6 UI languages · dark mode · 401→silent refresh</div>
+        <div class="cell"><b>FastAPI · SQLAlchemy 2 async · Pydantic v2</b>128 endpoints · 11 routers · SQLite (Postgres-ready) · lifespan auto-migration &amp; seed · Swagger at /docs</div>
+        <div class="cell"><b>Domain services</b>SOCRATES NLP · prakriti / dashavidha scoring · terminology 3-way mapping · adaptive question engine · OCR &amp; lab extraction · FHIR R4 builder + validator · history summariser</div>
+        <div class="cell"><b>AI chain</b>Sarvam AI (STT·translate·chat·TTS·OCR) → Whisper / Ollama local → labelled mock</div>
+        <div class="cell"><b>Data</b>39 tables · encrypted blob store <span class="mono">media/drive/{uuid}.bin</span> · audit log · retention engine</div>
+      </div>
+    </div>
+    <div>
+      <ul class="list">
+        <li><b>128 API endpoints</b>, every one role-guarded and covered by an interactive Swagger UI — judges can poke the API themselves</li>
+        <li><b>33 automated tests</b> exercise the full 8-role journey, cross-desk data flow, security guards and AI honesty</li>
+        <li><b>Docker Compose</b> included; SQLite today, Postgres-ready ORM for scale</li>
+        <li><b>Open standards only</b> — FHIR R4, JWT, OAuth-style refresh, ABHA/ABDM patterns. No proprietary lock-in.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 13 NUMBERS -->
+<section class="slide">
+  <div class="kicker">12 · By the numbers</div>
+  <h2>Built end-to-end, not a mock-up.</h2>
+  <div class="stats" style="grid-template-columns:repeat(6,1fr)">
+    <div class="stat"><div class="n" data-count="39">0</div><div class="l">database tables</div></div>
+    <div class="stat allo"><div class="n" data-count="128">0</div><div class="l">API endpoints</div></div>
+    <div class="stat"><div class="n" data-count="34">0</div><div class="l">frontend routes</div></div>
+    <div class="stat green"><div class="n" data-count="33">0</div><div class="l">automated tests, all passing</div></div>
+    <div class="stat ayu"><div class="n" data-count="8">0</div><div class="l">role-based portals</div></div>
+    <div class="stat"><div class="n" data-count="22">0</div><div class="l">speech-to-text languages</div></div>
+  </div>
+  <div class="grid g3">
+    <div class="card"><p><b style="color:var(--ink)">42</b> curated terminology entries → <b style="color:var(--ink)">126</b> coded rows across three systems</p></div>
+    <div class="card"><p><b style="color:var(--ink)">13</b> interactive cards on the consultation screen · <b style="color:var(--ink)">6</b> UI languages</p></div>
+    <div class="card"><p><b style="color:var(--ink)">2</b> real AI engines + honest fallback chain · <b style="color:var(--ink)">1</b> QR code for the entire visit</p></div>
+  </div>
+</section>
+
+<!-- 14 IMPACT -->
+<section class="slide">
+  <div class="kicker">13 · Real-world impact</div>
+  <h2>Where this goes next — the point<br>of the whole exercise.</h2>
+  <div class="grid g4">
+    <div class="card tint-allo"><h3>Primary Health Centres</h3><p>A typical PHC doctor sees 100+ patients a day with no digital record. ArogyaSetu turns each visit into structured, coded, FHIR-exportable data — feeding ABHA, not plastic bags.</p></div>
+    <div class="card tint-ayu"><h3>Ayushman Arogya Mandirs</h3><p>India's 1.5+ lakh Ayush health &amp; wellness centres deliver integrative care that no EHR represents today. Dual-coded records make AYUSH outcomes measurable nationally.</p></div>
+    <div class="card tint-green"><h3>Continuity of care</h3><p>A migrant worker treated in Bengaluru walks into a PHC in Bihar; the case file, allergies and medicines follow the ABHA account, not the paper.</p></div>
+    <div class="card tint-amber"><h3>Public-health signal</h3><p>When every consultation is coded (ICD-11 / NAMASTE), disease surveillance moves from annual surveys to near-real-time — this is the A, of ABDM's own "Arogya Setu" spirit.</p></div>
+  </div>
+  <p class="src">Alignment: UN SDG-3 (good health &amp; well-being) · Ayushman Bharat Digital Mission · National AYUSH Mission · Digital India. Deployable as a single container per facility; Sarvam-first with fully offline Whisper/Ollama mode for low-connectivity districts.</p>
+</section>
+
+<!-- 15 DEMO -->
+<section class="slide">
+  <div class="kicker">14 · Live demo</div>
+  <h2>Everything shown is running<br>on this machine, right now.</h2>
+  <div class="split">
+    <div>
+      <ul class="list">
+        <li><b>Patient portal</b> — <span class="mono">localhost:3000/login</span> · patient@demo.in</li>
+        <li><b>Staff portal</b> — <span class="mono">localhost:3000/staff/login</span> · doctor-allo@demo.in (all 8 roles one-click)</li>
+        <li><b>API playground</b> — <span class="mono">localhost:8000/docs</span> · 128 endpoints, live</li>
+        <li><b>Source code</b> — <span class="mono">github.com/venkaraddi-crypto/qriuos</span> · 33 tests: <span class="mono">pytest tests/ -q</span></li>
+        <li><b>Password for every demo account</b> — <span class="mono">password123</span></li>
+      </ul>
+    </div>
+    <div class="card tint-green">
+      <h3>7-minute demo path</h3>
+      <p style="font-size:13px;line-height:1.7">
+      1. Patient books → QR slip (30s)<br>
+      2. Voice intake, consent-gated (90s)<br>
+      3. Reception scans QR (30s)<br>
+      4. Nurse vitals (20s)<br>
+      5. Doctor: queue → consult → voice → SOCRATES → Amlapitta → 3 codes → prescribe → FHIR (3min)<br>
+      6. Pharmacy dispense → Billing pay (45s)<br>
+      7. Patient sees records + case file (30s)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 CLOSE -->
+<section class="slide title-slide">
+  <div class="kicker">ArogyaSetu · आरोग्यसेतु — "the bridge to health"</div>
+  <h1 style="font-size:64px">The record should be the bridge,<br>not the barrier.</h1>
+  <p class="sub">One QR code connects every desk. One conversation fills the record.<br>
+  Two systems of medicine share one language of codes. And the doctor — finally — just listens.</p>
+  <hr class="hr" style="width:520px;margin-top:26px">
+  <p class="footer-note">Thank you · github.com/venkaraddi-crypto/qriuos · live demo available now</p>
+  <svg class="qrmotif" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="#B4552D" stroke-width="2">
+    <rect x="4" y="4" width="40" height="40"/><rect x="12" y="12" width="24" height="24" fill="#B4552D" stroke="none"/>
+    <rect x="76" y="4" width="40" height="40"/><rect x="84" y="12" width="24" height="24" fill="#B4552D" stroke="none"/>
+    <rect x="4" y="76" width="40" height="40"/><rect x="12" y="84" width="24" height="24" fill="#B4552D" stroke="none"/>
+    <rect x="56" y="56" width="16" height="16"/><rect x="84" y="56" width="12" height="12"/>
+    <rect x="56" y="84" width="12" height="12"/><rect x="84" y="84" width="32" height="12"/>
+    <rect x="104" y="104" width="12" height="12"/>
+  </svg>
+</section>
+</main>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,ov=false;
+  var dots=document.getElementById('dots'),prog=document.getElementById('progress');
+  slides.forEach(function(s,i){var b=document.createElement('button');
+    b.title=(i+1)+': '+((s.querySelector('.kicker')||{}).textContent||'');
+    b.onclick=function(){go(i)};dots.appendChild(b);});
+  var db=[].slice.call(dots.children);
+  function animate(){
+    [].forEach.call(slides[cur].querySelectorAll('[data-count]'),function(el){
+      var target=+el.getAttribute('data-count'),t0=null;
+      function tick(t){if(!t0)t0=t;var p=Math.min((t-t0)/900,1);
+        el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+        if(p<1)requestAnimationFrame(tick);}
+      requestAnimationFrame(tick);});
+  }
+  function go(i){i=Math.max(0,Math.min(slides.length-1,i));
+    slides[cur].classList.remove('active');cur=i;
+    slides[cur].classList.add('active');
+    db.forEach(function(b,j){b.className=j===cur?'on':''});
+    prog.style.width=((cur+1)/slides.length*100)+'%';
+    if(!ov)animate();}
+  window.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+    else if(e.key==='Home'){go(0)} else if(e.key==='End'){go(slides.length-1)}
+    else if(e.key.toLowerCase()==='o'){ov=!ov;document.getElementById('deck').style.transform=ov?'scale(.22)':'';
+      document.getElementById('deck').style.transformOrigin='0 0';
+      document.getElementById('deck').style.pointerEvents=ov?'none':'';
+      if(ov){document.querySelectorAll('.slide').forEach(function(s){s.style.display='flex';s.style.position='relative';s.style.height='20vh';s.style.padding='14px';s.style.overflow='hidden';s.style.borderBottom='1px solid #D8CFC0';});}
+      else{document.querySelectorAll('.slide').forEach(function(s,i){s.style.display=i===cur?'flex':'none';s.style.position='absolute';s.style.height='';s.style.padding='';s.style.overflow='';s.style.borderBottom='';});}}
+    else if(e.key.toLowerCase()==='p'){window.print();}});
+  document.getElementById('next').onclick=function(){go(cur+1)};
+  document.getElementById('prev').onclick=function(){go(cur-1)};
+  document.addEventListener('click',function(e){
+    if(e.target.closest('#arrows')||e.target.closest('#dots'))return;
+    if(ov)return;
+    if(e.clientX>window.innerWidth*0.7)go(cur+1);
+    else if(e.clientX<window.innerWidth*0.15)go(cur-1);});
+  var swipe=null;
+  document.addEventListener('touchstart',function(e){swipe=e.touches[0].clientX});
+  document.addEventListener('touchend',function(e){if(swipe===null)return;
+    var d=e.changedTouches[0].clientX-swipe;
+    if(Math.abs(d)>60)go(cur+(d<0?1:-1));swipe=null;});
+  go(0);
+})();
+</script>
+</body>
+</html>
