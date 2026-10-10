@@ -426,6 +426,9 @@ ul.list li b{color:var(--ink)}
 (function(){
   var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,ov=false;
   var dots=document.getElementById('dots'),prog=document.getElementById('progress');
+  /* pre-set counters to final values so PDF/print shows real numbers */
+  [].forEach.call(document.querySelectorAll('[data-count]'),function(el){
+    el.textContent=el.getAttribute('data-count');});
   slides.forEach(function(s,i){var b=document.createElement('button');
     b.title=(i+1)+': '+((s.querySelector('.kicker')||{}).textContent||'');
     b.onclick=function(){go(i)};dots.appendChild(b);});
@@ -433,6 +436,7 @@ ul.list li b{color:var(--ink)}
   function animate(){
     [].forEach.call(slides[cur].querySelectorAll('[data-count]'),function(el){
       var target=+el.getAttribute('data-count'),t0=null;
+      el.textContent='0';
       function tick(t){if(!t0)t0=t;var p=Math.min((t-t0)/900,1);
         el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
         if(p<1)requestAnimationFrame(tick);}
