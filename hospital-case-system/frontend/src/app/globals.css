@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f7f3ec;
+  --ink: #1a1a1a;
+  --hairline: #d8cfc0;
+  --surface: #fffdf9;
+  --muted: #6b6257;
+  --font-scale: 1;
+}
+[data-theme="dark"] {
+  --paper: #1c1a17;
+  --ink: #efe9df;
+  --hairline: #3a3530;
+  --surface: #262320;
+  --muted: #a89f93;
+}
+
+html { font-size: calc(16px * var(--font-scale)); }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, .serif { font-family: var(--font-serif), Georgia, serif; }
+.mono { font-family: var(--font-mono), ui-monospace, monospace; }
+
+@layer components {
+  .card { @apply rounded-sm border p-4; border-color: var(--hairline); background: var(--surface); }
+  .tint-allo { border-left: 4px solid #3e5c76; }
+  .tint-ayu { border-left: 4px solid #7a6a21; }
+  .input { @apply w-full rounded-sm border px-3 py-2 text-sm outline-none; border-color: var(--hairline); background: var(--surface); color: var(--ink); }
+  .input:focus { border-color: #b4552d; }
+  .btn-primary { @apply inline-flex items-center gap-2 rounded-sm bg-clay px-4 py-2 text-sm font-medium text-white; }
+  .btn-primary:hover { background: #94401f; }
+  .btn-primary:disabled { @apply cursor-not-allowed opacity-50; }
+  .btn-ghost { @apply inline-flex items-center gap-2 rounded-sm border px-3 py-2 text-sm; border-color: var(--hairline); color: var(--ink); }
+  .btn-ghost:hover { border-color: #b4552d; }
+  .badge { @apply inline-block rounded-sm border px-2 py-0.5 text-xs; border-color: var(--hairline); }
+  .badge-red { color: #a03a2a; background: #f9e9e4; border-color: #a03a2a; }
+  .badge-green { color: #4a6b3a; background: #edf3e6; border-color: #4a6b3a; }
+  .badge-amber { color: #9a7a1f; background: #fbf3dc; border-color: #9a7a1f; }
+  .tab-active { border-bottom: 2px solid #b4552d; color: #b4552d; }
+  .wavebar { display: inline-block; width: 3px; margin: 0 1px; background: #b4552d; animation: pulsebar 0.8s ease-in-out infinite; }
+  .skip-link { @apply absolute -top-10 left-2 z-50 rounded-sm bg-clay px-3 py-1 text-white; }
+  .skip-link:focus { @apply top-2; }
+  .muted { color: var(--muted); }
+  .label { @apply mb-1 block text-xs uppercase tracking-wide; color: var(--muted); }
+  .hr { border-color: var(--hairline); }
+}
+@keyframes pulsebar { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+@media print { nav, header, .no-print { display: none !important; } body { background: #fff; } }
