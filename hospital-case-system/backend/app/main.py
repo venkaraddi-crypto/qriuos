@@ -9,7 +9,7 @@ from sqlalchemy import select, text
 from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
 from app.models import ConsultationTranscript, RetentionPolicy
-from app.seed import seed_if_empty
+from app.seed import refresh_demo_day, seed_if_empty
 
 # Columns added after the first schema shipped; ALTERed in on legacy SQLite files.
 _LEGACY_COLUMNS: list[tuple[str, str, str]] = [
@@ -41,6 +41,7 @@ async def _prepare_schema() -> None:
     await _ensure_legacy_columns()
     async with SessionLocal() as db:
         await seed_if_empty(db)
+        await refresh_demo_day(db)
 
 
 async def _purge_expired_audio() -> None:

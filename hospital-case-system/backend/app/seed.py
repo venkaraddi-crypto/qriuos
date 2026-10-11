@@ -177,3 +177,32 @@ async def seed_if_empty(db: AsyncSession) -> None:
     db.add_all([DrugInteractionPair(drug_a=a, drug_b=b, severity=s, note=n) for a, b, s, n in INTERACTIONS])
     db.add(RetentionPolicy(raw_audio_retention_days=30, updated_by=by_email["admin@demo.in"].id))
     await db.commit()
+
+
+async def refresh_demo_day(db: AsyncSession) -> None:
+    """Keep the demo hospital 'live' on every boot (self-healing demo dates).
+
+    1. Active appointments (BOOKED / CHECKED_IN / IN_CONSULTATION) dated before today
+       are rolled forward to today, so the doctor queue, reception board and nurse
+       board always show the seeded patients regardless of when the DB was created.
+    2. Doctor slots are topped up for today .. today+4 so booking always has capacity.
+    """
+    today = date.today()
+    stale = (await db.execute(
+        select(Appointment).where(
+            Appointment.status.in_(["BOOKED", "CHECKED_IN", "IN_CONSULTATION"]),
+            Appointment.date < today,
+        ))).scalars().all()
+    for a in stale:
+        a.date = today
+    doctors = (await db.execute(select(DoctorProfile))).scalars().all()
+    for doc in doctors:
+        have = {(r[0], r[1]) for r in (await db.execute(
+            select(DoctorSlot.date, DoctorSlot.start_time).where(DoctorSlot.doctor_id == doc.id)))}
+        for d in range(5):
+            day = today + timedelta(days=d)
+            for h in (9, 10, 11, 14, 15):
+                if (day, time(h, 0)) not in have:
+                    db.add(DoctorSlot(doctor_id=doc.id, date=day, start_time=time(h, 0),
+                                      end_time=time(h + 1, 0), capacity=10, booked_count=0))
+    await db.commit()

@@ -23,6 +23,9 @@ Demo logins (password `password123`): `patient@demo.in`, `reception@demo.in`, `d
 `doctor-ayu@demo.in`, `nurse@demo.in`, `lab@demo.in`, `pharmacy@demo.in`, `billing@demo.in`, `admin@demo.in`.
 The database is seeded on first start (8 patients, 2 doctors with 5 days of slots, checked-in patients
 holding tokens 2/3, a red-flag chest-pain case, a dual-coded Amlapitta case, a multi-visit diabetic).
+On every boot the app also self-heals the demo: active appointments dated in the past are rolled
+forward to today and doctor slots are topped up, so the staff boards always look live.
+Reception check-in only accepts same-day appointments.
 
 ## Configuration (`backend/.env`, see `.env.example`)
 

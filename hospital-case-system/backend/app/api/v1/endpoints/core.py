@@ -370,6 +370,8 @@ async def reception_lookup(q: str, user: User = Depends(require_roles("RECEPTION
 @router.post("/reception/scan")
 async def reception_scan(body: CodeIn, user: User = Depends(require_roles("RECEPTION", "ADMIN")), db: AsyncSession = Depends(get_db)):
     appt = await appointment_by_code(db, body.code)
+    if appt.date != date.today():
+        raise HTTPException(status.HTTP_409_CONFLICT, "Appointment is not scheduled for today")
     if appt.status == "CHECKED_IN":
         raise HTTPException(status.HTTP_409_CONFLICT, "Already checked in")
     if appt.status != "BOOKED":
